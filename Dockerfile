@@ -2,10 +2,10 @@
 ## STEP 1 build executable binary
 #############################
 FROM node AS builder
-ARG REACT_APP_GRAPHQL_ENDPOINT
+ARG REACT_APP_GRAPHQL_ENDPOINT=/api
 
 WORKDIR /build
-COPY ./web-admin .
+COPY . .
 
 RUN yarn install
 RUN yarn build
@@ -13,8 +13,7 @@ RUN yarn build
 FROM node AS runtime
 WORKDIR /app
 COPY --from=builder /build /app
-RUN yarn global add serve
 
 EXPOSE 5000
 
-CMD [ "serve", "-s",  "/app/build"]
+CMD [ "node", "Server.js" ]
