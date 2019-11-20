@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Skeleton from 'react-loading-skeleton';
-import { Divider, ListItemIcon, IconButton, makeStyles } from '@material-ui/core';
+import { Divider, ListItemIcon, IconButton, makeStyles, Button } from '@material-ui/core';
 import clsx from 'clsx';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import DatabaseIcon from '@material-ui/icons/Storage';
@@ -54,11 +54,11 @@ const useStyles = makeStyles(theme => ({
     // },
     drawer: {
         [theme.breakpoints.up('sm')]: {
-          width: drawerWidth,
-          flexShrink: 0,
+            width: drawerWidth,
+            flexShrink: 0,
         },
     },
-    drawerHeader: { 
+    drawerHeader: {
         backgroundColor: '#232f3e',
         boxShadow: '0 -1px 0 #404854 inset',
         paddingTop: '16px',
@@ -92,49 +92,52 @@ const useStyles = makeStyles(theme => ({
     categoryHeader: {
         paddingTop: theme.spacing(2),
         paddingBottom: theme.spacing(2),
-      },
-      categoryHeaderPrimary: {
+    },
+    categoryHeaderPrimary: {
         color: theme.palette.common.white,
-      },
-      item: {
+    },
+    item: {
         paddingTop: 1,
         paddingBottom: 1,
         color: 'rgba(255, 255, 255, 0.7)',
         '&:hover,&:focus': {
-          backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
         },
-      },
-      itemCategory: {
+    },
+    itemCategory: {
         backgroundColor: '#232f3e',
         boxShadow: '0 -1px 0 #404854 inset',
         paddingTop: theme.spacing(2),
         paddingBottom: theme.spacing(2),
-      },
-      firebase: {
+    },
+    firebase: {
         fontSize: 24,
         color: theme.palette.common.white,
-      },
-      itemActiveItem: {
+    },
+    itemActiveItem: {
         color: '#4fc3f7',
-      },
-      itemPrimary: {
+    },
+    itemPrimary: {
         fontSize: 'inherit',
-      },
-      itemIcon: {
+    },
+    itemIcon: {
         minWidth: 'auto',
         marginRight: theme.spacing(2),
-      },
-      divider: {
+    },
+    divider: {
         marginTop: theme.spacing(2),
-      },
-      link: {
+    },
+    link: {
         marginRight: '20px',
         textDecoration: 'none',
         color: lightColor,
         '&:hover': {
-          color: theme.palette.common.white,
+            color: theme.palette.common.white,
         },
-      },
+    },
+    addDatabase: {
+        marginRight: theme.spacing(1),
+    },
 }));
 
 
@@ -146,75 +149,78 @@ export const Databases: FunctionComponent<Props> = () => {
     return (
         <DatabasesComponent>
 
-    {({ data, error, loading, refetch }) => {
-      
-      var names: string[] = [];
-      
-      if(data && data.databases && data.databases.names) {
-        names = data.databases.names
-      }
+            {({ data, error, loading, refetch }) => {
 
-      // todo:
-      if(loading) {
-        return <Paper>
-          <List>
-          {Array.from(Array(3).keys()).map((i) => <ListItem key={i} button disabled><ListItemText><Skeleton /></ListItemText></ListItem>)}
-          </List>
-          </Paper>
-      }
-      
-      if(error) {
-        return <Paper><Typography variant="h5" component="h3">
-            Error
+                var names: string[] = [];
+
+                if (data && data.databases && data.databases.names) {
+                    names = data.databases.names
+                }
+
+                // todo:
+                if (loading) {
+                    return <Paper>
+                        <List>
+                            {Array.from(Array(3).keys()).map((i) => <ListItem key={i} button disabled><ListItemText><Skeleton /></ListItemText></ListItem>)}
+                        </List>
+                    </Paper>
+                }
+
+                if (error) {
+                    return <Paper><Typography variant="h5" component="h3">
+                        Error
           </Typography>
-          <Typography component="p">
-            {JSON.stringify(error)}
-          </Typography></Paper>
-      }
+                        <Typography component="p">
+                            {JSON.stringify(error)}
+                        </Typography></Paper>
+                }
 
-      return (
-            <List disablePadding>
-                <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
-                    <IconButton component={RouterLink} to={"/"} edge="end">
-                        <LogoIcon />
-                    </IconButton>
-                </ListItem>
-                <ListItem className={clsx(classes.item, classes.itemCategory)}>
-                    <ListItemIcon className={classes.itemIcon}>
-                        <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText classes={{ primary: classes.itemPrimary, }}>
-                        Dashboard
+                return (
+                    <List disablePadding>
+                        <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
+                            <IconButton component={RouterLink} to={"/"} edge="end">
+                                <LogoIcon />
+                            </IconButton>
+                        </ListItem>
+                        <ListItem className={clsx(classes.item, classes.itemCategory)}>
+                            <ListItemIcon className={classes.itemIcon}>
+                                <HomeIcon />
+                            </ListItemIcon>
+                            <ListItemText classes={{ primary: classes.itemPrimary, }}>
+                                Dashboard
                     </ListItemText>
-                </ListItem>
-                <ListItem className={classes.categoryHeader}>
-                    <ListItemText classes={{ primary: classes.categoryHeaderPrimary, }}>
-                        Databases
+                        </ListItem>
+                        <ListItem className={classes.categoryHeader}>
+                            <ListItemText classes={{ primary: classes.categoryHeaderPrimary, }}>
+                                Databases
                     </ListItemText>
-                </ListItem>
-            {
-                names.length === 0 
-                ? <ListItem key="empty">There are no databases you have access to</ListItem> 
-                : names.map((name) => (
-                    <ListItem
-                          key={name}
-                          button
-                          className={clsx(classes.item)}
-                          component={Link} to={`/${name}`}
-                      >
-                          <ListItemIcon className={classes.itemIcon}>
-                              <DatabaseIcon />
-                          </ListItemIcon>
-                          <ListItemText classes={{ primary: classes.itemPrimary, }}>
-                          {name}
-                          </ListItemText>
-                      </ListItem>
-                    ))
-            }
-            </List>
-      );
-    }}
-  </DatabasesComponent>
+                            <Button variant="contained" color="primary" className={classes.addDatabase}>
+                                new
+                    </Button>
+                        </ListItem>
+                        {
+                            names.length === 0
+                                ? <ListItem key="empty">There are no databases you have access to</ListItem>
+                                : names.map((name) => (
+                                    <ListItem
+                                        key={name}
+                                        button
+                                        className={clsx(classes.item)}
+                                        component={Link} to={`/${name}`}
+                                    >
+                                        <ListItemIcon className={classes.itemIcon}>
+                                            <DatabaseIcon />
+                                        </ListItemIcon>
+                                        <ListItemText classes={{ primary: classes.itemPrimary, }}>
+                                            {name}
+                                        </ListItemText>
+                                    </ListItem>
+                                ))
+                        }
+                    </List>
+                );
+            }}
+        </DatabasesComponent>
     );
 };
 

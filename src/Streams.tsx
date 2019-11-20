@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     block: {
         display: 'block',
     },
-    addUser: {
+    addStream: {
         marginRight: theme.spacing(1),
     },
     contentWrapper: {
@@ -117,7 +117,7 @@ export const Streams: FunctionComponent<Props> = ({ database }) => {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" component={Link} to={`/${encodeURIComponent(database)}/new`} color="primary" className={classes.addUser}>
+                                    <Button variant="contained" component={Link} to={`/${encodeURIComponent(database)}/new`} color="primary" className={classes.addStream}>
                                         new stream
                                     </Button>
                                     <Tooltip title="Reload">
