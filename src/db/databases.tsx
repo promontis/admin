@@ -113,6 +113,7 @@ const useStyles = makeStyles(theme => ({
     firebase: {
         fontSize: 24,
         color: theme.palette.common.white,
+        height: '82px'
     },
     itemActiveItem: {
         color: '#4fc3f7',
@@ -169,7 +170,7 @@ export const Databases: FunctionComponent<Props> = () => {
                 if (error) {
                     return <Paper><Typography variant="h5" component="h3">
                         Error
-          </Typography>
+                         </Typography>
                         <Typography component="p">
                             {JSON.stringify(error)}
                         </Typography></Paper>

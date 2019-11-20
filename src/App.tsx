@@ -13,9 +13,10 @@ import breadcrumbCreator from './Breadcrumbs';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import { Drawer, CssBaseline } from "@material-ui/core";
-import { Header } from "./header/header";
+import { Drawer, CssBaseline, AppBar, Toolbar, Grid, Link } from "@material-ui/core";
 import clsx from "clsx";
+import { useAuthContext } from "./login/state";
+import { Link as RouterLink } from "react-router-dom";
 
 function MadeWithLove() {
     return (
@@ -78,12 +79,12 @@ const useStyles = makeStyles(theme => ({
     },
     main: {
         flex: 1,
-        padding: theme.spacing(6, 4),
-        background: '#eaeff1',
+        //padding: theme.spacing(6, 4),
+        // background: '#eaeff1',
     },
     footer: {
         padding: theme.spacing(2),
-        background: '#eaeff1',
+        // background: '#eaeff1',
     },
     appBarShift: {
         marginLeft: drawerWidth,
@@ -215,19 +216,44 @@ const Breadcrumbs = breadcrumbCreator(routes, ["/login", "/logout"]);
 export default function App() {
 
     const classes = useStyles();
-
-    const handleDrawerToggle = () => {
-        // todo
-    };
+    const { isAuthenticated } = useAuthContext();
 
     return (
         <div className={classes.root}>
             <CssBaseline />
-            <Drawer variant="permanent" classes={{ paper: classes.drawer }} open={true}>
-                <Databases />
-            </Drawer>
-            <main className={clsx(classes.app, classes.appBarShift)}>
-                <Header onDrawerToggle={handleDrawerToggle} />
+            {isAuthenticated &&
+                <Drawer variant="permanent" classes={{ paper: classes.drawer }} open={true}>
+                    <Databases />
+                </Drawer>
+            }
+            <main className={clsx(classes.app, isAuthenticated && classes.appBarShift)}>
+                <AppBar color="primary" position="sticky" elevation={0}>
+                    <Toolbar>
+                        <Grid container spacing={1} alignItems="center">
+                            <Grid item xs />
+                            <Grid item>
+                                <Link className={classes.link} href="#" variant="body2">
+                                    Go to docs
+                            </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link className={classes.link} href="https://streamsdb.io/chat/" variant="body2">
+                                    Chat
+                            </Link>
+                            </Grid>
+                            <Grid item>
+                                {isAuthenticated ?
+                                    <Link className={classes.link} component={RouterLink} to="/logout" variant="body2">
+                                        Logout
+                                </Link> :
+                                    <Link className={classes.link} component={RouterLink} to="/login" variant="body2">
+                                        Login
+                                </Link>
+                                }
+                            </Grid>
+                        </Grid>
+                    </Toolbar>
+                </AppBar>
                 <main className={classes.main}>
                     <Switch>
                         {routes.filter(i => i.component).map(r => <Route exact={r.exact} path={r.path} component={r.component} />)}

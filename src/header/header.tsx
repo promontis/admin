@@ -17,6 +17,8 @@ import Typography from '@material-ui/core/Typography';
 import { createStyles, Theme, withStyles, WithStyles, makeStyles } from '@material-ui/core/styles';
 import { useAuthContext } from "./../login/state";
 import { Link as RouterLink } from "react-router-dom";
+import { Breadcrumbs } from '@material-ui/core';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -40,59 +42,29 @@ const useStyles = makeStyles(theme => ({
     button: {
         borderColor: lightColor,
     },
+    tertiaryBar: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        backgroundColor: '#eaeaea',
+        padding: '10px 24px',
+        fontSize: '12px'
+    },
+    breadcrumbItem: {
+        fontSize: '12px'
+    }
 }));
 
 interface HeaderProps {
-    onDrawerToggle: () => void;
+    
 }
 
 export function Header(props: HeaderProps) {
 
-    const { onDrawerToggle } = props;
     const classes = useStyles();
     const { isAuthenticated } = useAuthContext();
 
     return (
         <React.Fragment>
-            <AppBar color="primary" position="sticky" elevation={0}>
-                <Toolbar>
-                    <Grid container spacing={1} alignItems="center">
-                        <Hidden smUp>
-                            <Grid item>
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="open drawer"
-                                    onClick={onDrawerToggle}
-                                    className={classes.menuButton}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
-                            </Grid>
-                        </Hidden>
-                        <Grid item xs />
-                        <Grid item>
-                            <Link className={classes.link} href="#" variant="body2">
-                                Go to docs
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link className={classes.link} href="https://streamsdb.io/chat/" variant="body2">
-                                Chat
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            {isAuthenticated ?
-                                <Link className={classes.link} component={RouterLink} to="/logout" variant="body2">
-                                    Logout
-                                </Link> :
-                                <Link className={classes.link} component={RouterLink} to="/login" variant="body2">
-                                    Login
-                                </Link>
-                            }
-                        </Grid>
-                    </Grid>
-                </Toolbar>
-            </AppBar>
+           
             <AppBar
                 component="div"
                 className={classes.secondaryBar}
@@ -104,21 +76,9 @@ export function Header(props: HeaderProps) {
                     <Grid container alignItems="center" spacing={1}>
                         <Grid item xs>
                             <Typography color="inherit" variant="h5" component="h1">
-                                Promontis   
+                                Promontis 
                             </Typography>
                         </Grid>
-                        {/* <Grid item>
-                            <Button className={classes.button} variant="outlined" color="inherit" size="small">
-                                Web setup
-              </Button>
-                        </Grid>
-                        <Grid item>
-                            <Tooltip title="Help">
-                                <IconButton color="inherit">
-                                    <HelpIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Grid> */}
                     </Grid>
                 </Toolbar>
             </AppBar>
@@ -135,6 +95,27 @@ export function Header(props: HeaderProps) {
                     <Tab textColor="inherit" label="Indexes" />
                     <Tab textColor="inherit" label="Users" />
                 </Tabs>
+            </AppBar>
+            <AppBar
+                component="div"
+                className={classes.tertiaryBar}
+                position="static"
+                elevation={0}
+            >
+                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                    <Link color="inherit" href="/" className={classes.breadcrumbItem}>
+                        All
+                    </Link>
+                    <Link color="inherit" href="/" className={classes.breadcrumbItem}>
+                        model-0e748b9f-84d5-4663-bdb7-399f411cd503
+                    </Link>
+                    {/* <Typography color="textPrimary" className={classes.breadcrumbItem}>
+                        model-0e748b9f-84d5-4663-bdb7-399f411cd503
+                    </Typography> */}
+                    <Typography color="textPrimary" className={classes.breadcrumbItem}>
+                        2
+                    </Typography>
+                </Breadcrumbs>
             </AppBar>
         </React.Fragment>
     );

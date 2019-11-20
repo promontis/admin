@@ -14,6 +14,7 @@ import { AppBar, Grid, TextField, Tooltip, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import { Header } from "./header/header";
 
 type Props = {
     database: string;
@@ -37,7 +38,6 @@ interface StreamsProps {
 }
 
 const StreamsContent: FunctionComponent<StreamsProps> = ({ database, page }) => {
-    debugger;
     if (!page.names || page.names.length === 0) {
         return <List><ListItem><ListItemText>No Streams in database</ListItemText></ListItem></List>
     }
@@ -49,7 +49,7 @@ const StreamsContent: FunctionComponent<StreamsProps> = ({ database, page }) => 
 const useStyles = makeStyles(theme => ({
     paper: {
         //maxWidth: 936,
-        // margin: '5px',
+        margin: '24px',
         overflow: 'hidden',
     },
     searchBar: {
@@ -99,43 +99,46 @@ export const Streams: FunctionComponent<Props> = ({ database }) => {
             }
 
             return (
-                <Paper className={classes.paper}>
-                    <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
-                        <Toolbar>
-                            <Grid container spacing={2} alignItems="center">
-                                <Grid item>
-                                    <SearchIcon className={classes.block} color="inherit" />
+                <>
+                    <Header />
+                    <Paper className={classes.paper}>
+                        <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
+                            <Toolbar>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
+                                        <SearchIcon className={classes.block} color="inherit" />
+                                    </Grid>
+                                    <Grid item xs>
+                                        <TextField
+                                            fullWidth
+                                            placeholder="Search by stream name. Wildcard (*) supported"
+                                            InputProps={{
+                                                disableUnderline: true,
+                                                className: classes.searchInput,
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="contained" component={Link} to={`/${encodeURIComponent(database)}/new`} color="primary" className={classes.addStream}>
+                                            new stream
+                                        </Button>
+                                        <Tooltip title="Reload">
+                                            <IconButton>
+                                                <RefreshIcon className={classes.block} color="inherit" />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs>
-                                    <TextField
-                                        fullWidth
-                                        placeholder="Search by stream name. Wildcard (*) supported"
-                                        InputProps={{
-                                            disableUnderline: true,
-                                            className: classes.searchInput,
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <Button variant="contained" component={Link} to={`/${encodeURIComponent(database)}/new`} color="primary" className={classes.addStream}>
-                                        new stream
-                                    </Button>
-                                    <Tooltip title="Reload">
-                                        <IconButton>
-                                            <RefreshIcon className={classes.block} color="inherit" />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Grid>
-                            </Grid>
-                        </Toolbar>
-                    </AppBar>
-                    <div className={classes.contentWrapper}>
-                        {/* <Typography color="textSecondary" align="center">
-                            No streams for this database yet
-                        </Typography> */}
-                        <StreamsContent database={database} page={page} />
-                    </div>
-                </Paper>
+                            </Toolbar>
+                        </AppBar>
+                        <div className={classes.contentWrapper}>
+                            {/* <Typography color="textSecondary" align="center">
+                                No streams for this database yet
+                            </Typography> */}
+                            <StreamsContent database={database} page={page} />
+                        </div>
+                    </Paper>
+                </>
             );
           
         }}</StreamsQueryComponent>
