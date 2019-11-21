@@ -77,7 +77,7 @@ const StreamsContent: FunctionComponent<StreamsProps> = ({ database, page }) => 
                 {page.names.map(name => (
                     <TableRow key={name}>
                         <TableCell component="th" scope="row">
-                            <Link color="inherit" component={Link1} to={`/${encodeURIComponent(database)}/${encodeURIComponent(name)}`}>
+                            <Link component={Link1} to={`/${encodeURIComponent(database)}/${encodeURIComponent(name)}`}>
                                 {name}
                             </Link>
                         </TableCell>
