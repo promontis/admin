@@ -32,7 +32,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Skeleton from 'react-loading-skeleton';
-import {Header} from '../header/header';
+import { Header } from '../header/header';
 
 interface Props {
     database: string;
@@ -84,6 +84,9 @@ const Paging: FunctionComponent<PagingProps> = ({ database, stream, from, limit,
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        paper: {
+            padding: '24px'
+        },
         root: {
             margin: theme.spacing(1),
         },
@@ -132,8 +135,8 @@ const SliceView: FunctionComponent<SelectionAndData> = ({ database, stream, from
 
     return (
         <>
-            <Header />
-            <Grid container spacing={1}>
+            <Header database={database} stream={stream} />
+            <Grid container spacing={1} className={classes.paper}>
                 <Grid item xs={12}>
                     <Typography variant="caption" color="textSecondary" gutterBottom>
                         position {slice.from} and {slice.reverse ? <abbr title="reading the stream backward">older</abbr> : <abbr title="reading the stream forward">newer</abbr>} messages

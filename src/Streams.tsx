@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import gql from "graphql-tag";
-import { Link } from "react-router-dom";
 import { StreamsQueryComponent, StreamsPage } from './data/types'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,7 +13,14 @@ import { AppBar, Grid, TextField, Tooltip, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { Header } from "./header/header";
+import { Header } from './header/header';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
 
 type Props = {
     database: string;
@@ -37,18 +43,65 @@ interface StreamsProps {
     page: StreamsPage;
 }
 
+const Link1 = React.forwardRef<HTMLAnchorElement, RouterLinkProps>((props, ref) => (
+    <RouterLink innerRef={ref} {...props} />
+  ));
+
 const StreamsContent: FunctionComponent<StreamsProps> = ({ database, page }) => {
+
     if (!page.names || page.names.length === 0) {
-        return <List><ListItem><ListItemText>No Streams in database</ListItemText></ListItem></List>
+
+        return (
+            <List>
+                <ListItem>
+                    <ListItemText>
+                        No Streams in database
+                    </ListItemText>
+                </ListItem>
+            </List>
+        );
     }
-    return <List>
-        {page.names.map((name) => (<ListItem button component={Link} to={`/${encodeURIComponent(database)}/${encodeURIComponent(name)}`}><ListItemText>{name}</ListItemText></ListItem>))}
-    </List>
+
+    return (
+        <Table aria-label="simple table">
+            {/* <TableHead>
+                <TableRow>
+                    <TableCell>Stream</TableCell>
+                    <TableCell align="right">Calories</TableCell>
+                    <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                    <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                    <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                </TableRow>
+            </TableHead> */}
+            <TableBody>
+                {page.names.map(name => (
+                    <TableRow key={name}>
+                        <TableCell component="th" scope="row">
+                            <Link color="inherit" component={Link1} to={`/${encodeURIComponent(database)}/${encodeURIComponent(name)}`}>
+                                {name}
+                            </Link>
+                        </TableCell>
+                        {/* <TableCell align="right">
+                            {name}
+                        </TableCell>
+                        <TableCell align="right">
+                            {name}
+                        </TableCell>
+                        <TableCell align="right">
+                            {name}
+                        </TableCell>
+                        <TableCell align="right">
+                            {name}
+                        </TableCell> */}
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    );
 }
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        //maxWidth: 936,
         margin: '24px',
         overflow: 'hidden',
     },
@@ -65,82 +118,100 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(1),
     },
     contentWrapper: {
-        margin: '40px 16px',
+    
     },
 }));
 
 export const Streams: FunctionComponent<Props> = ({ database }) => {
+
     const classes = useStyles();
 
-    return (<StreamsQueryComponent variables={{ database }}>
-        {({ data, error, loading }) => {
-            if (loading) {
-                return <Paper>
-                    <List>
-                        {Array.from(Array(3).keys()).map((i) => <ListItem key={i} button disabled><ListItemText><Skeleton /></ListItemText></ListItem>)}
-                    </List>
-                </Paper>
-            }
+    return (
+        <>
+            <Header database={database} />
+            <StreamsQueryComponent variables={{ database }}>
 
-            if (error) {
-                return <Paper>
-                    <Typography variant="h5" component="h3">
-                        Error
-                    </Typography>
-                    <Typography component="p">
-                        {error}
-                    </Typography>
-                </Paper>
-            }
+                {({ data, error, loading }) => {
+                    
+                    if (loading) {
 
-            var page: StreamsPage = { total: 0 };
-            if (data && data.database && data.database.streams) {
-                page = data.database.streams
-            }
+                        return (
+                            <Paper>
+                                <List>
+                                    {
+                                        Array.from(Array(3).keys()).map((i) => 
+                                            <ListItem key={i} button disabled>
+                                                <ListItemText>
+                                                    <Skeleton />
+                                                </ListItemText>
+                                            </ListItem>
+                                        )
+                                    }
+                                </List>
+                            </Paper>
+                        );
+                    }
 
-            return (
-                <>
-                    <Header />
-                    <Paper className={classes.paper}>
-                        <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
-                            <Toolbar>
-                                <Grid container spacing={2} alignItems="center">
-                                    <Grid item>
-                                        <SearchIcon className={classes.block} color="inherit" />
+                    if (error) {
+
+                        return (
+                            <Paper>
+                                <Typography variant="h5" component="h3">
+                                    Error
+                                </Typography>
+                                <Typography component="p">
+                                    {error}
+                                </Typography>
+                            </Paper>
+                        );
+                    }
+
+                    var page: StreamsPage = { total: 0 };
+                    if (data && data.database && data.database.streams) {
+                        page = data.database.streams
+                    }
+
+                    return (
+                        <Paper className={classes.paper}>
+                            <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
+                                <Toolbar>
+                                    <Grid container spacing={2} alignItems="center">
+                                        <Grid item>
+                                            <SearchIcon className={classes.block} color="inherit" />
+                                        </Grid>
+                                        <Grid item xs>
+                                            <TextField
+                                                fullWidth
+                                                placeholder="Search by stream name. Wildcard (*) supported"
+                                                InputProps={{
+                                                    disableUnderline: true,
+                                                    className: classes.searchInput,
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <Button variant="contained" component={RouterLink} to={`/${encodeURIComponent(database)}/new`} color="primary" className={classes.addStream}>
+                                                new stream
+                                            </Button>
+                                            <Tooltip title="Reload">
+                                                <IconButton>
+                                                    <RefreshIcon className={classes.block} color="inherit" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs>
-                                        <TextField
-                                            fullWidth
-                                            placeholder="Search by stream name. Wildcard (*) supported"
-                                            InputProps={{
-                                                disableUnderline: true,
-                                                className: classes.searchInput,
-                                            }}
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <Button variant="contained" component={Link} to={`/${encodeURIComponent(database)}/new`} color="primary" className={classes.addStream}>
-                                            new stream
-                                        </Button>
-                                        <Tooltip title="Reload">
-                                            <IconButton>
-                                                <RefreshIcon className={classes.block} color="inherit" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                </Grid>
-                            </Toolbar>
-                        </AppBar>
-                        <div className={classes.contentWrapper}>
-                            {/* <Typography color="textSecondary" align="center">
+                                </Toolbar>
+                            </AppBar>
+                            <div className={classes.contentWrapper}>
+                                {/* <Typography color="textSecondary" align="center">
                                 No streams for this database yet
                             </Typography> */}
-                            <StreamsContent database={database} page={page} />
-                        </div>
-                    </Paper>
-                </>
-            );
-          
-        }}</StreamsQueryComponent>
+                                <StreamsContent database={database} page={page} />
+                            </div>
+                        </Paper>
+                    );
+
+                }}</StreamsQueryComponent>
+        </>
     )
 }

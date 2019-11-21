@@ -23,6 +23,12 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
 const useStyles = makeStyles(theme => ({
+    breadcrumb: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        backgroundColor: '#eaeaea',
+        padding: '10px 24px',
+        fontSize: '12px'
+    },
     secondaryBar: {
         zIndex: 0,
     },
@@ -42,19 +48,15 @@ const useStyles = makeStyles(theme => ({
     button: {
         borderColor: lightColor,
     },
-    tertiaryBar: {
-        color: 'rgba(0, 0, 0, 0.87)',
-        backgroundColor: '#eaeaea',
-        padding: '10px 24px',
-        fontSize: '12px'
-    },
     breadcrumbItem: {
         fontSize: '12px'
     }
 }));
 
 interface HeaderProps {
-    
+    database: string;
+    stream?: string;
+    message?: number;
 }
 
 export function Header(props: HeaderProps) {
@@ -64,58 +66,71 @@ export function Header(props: HeaderProps) {
 
     return (
         <React.Fragment>
-           
-            <AppBar
+            <AppBar 
                 component="div"
-                className={classes.secondaryBar}
                 color="primary"
-                position="static"
+                position="sticky"
                 elevation={0}
             >
+                <Toolbar>
+                    <Grid container spacing={1} alignItems="center">
+                        <Grid item xs />
+                        <Grid item>
+                            <Link className={classes.link} href="#" variant="body2">
+                                Go to docs
+                        </Link>
+                        </Grid>
+                        <Grid item>
+                            <Link className={classes.link} href="https://streamsdb.io/chat/" variant="body2">
+                                Chat
+                        </Link>
+                        </Grid>
+                        <Grid item>
+                            {isAuthenticated ?
+                                <Link className={classes.link} component={RouterLink} to="/logout" variant="body2">
+                                    Logout
+                            </Link> :
+                                <Link className={classes.link} component={RouterLink} to="/login" variant="body2">
+                                    Login
+                            </Link>
+                            }
+                        </Grid>
+                    </Grid>
+                </Toolbar>
                 <Toolbar>
                     <Grid container alignItems="center" spacing={1}>
                         <Grid item xs>
                             <Typography color="inherit" variant="h5" component="h1">
-                                Promontis 
+                                {props.database} 
                             </Typography>
                         </Grid>
                     </Grid>
                 </Toolbar>
-            </AppBar>
-            <AppBar
-                component="div"
-                className={classes.secondaryBar}
-                color="primary"
-                position="static"
-                elevation={0}
-            >
                 <Tabs value={0} textColor="inherit">
                     <Tab textColor="inherit" label="Streams" />
+                    <Tab textColor="inherit" label="Visualize" />
                     <Tab textColor="inherit" label="Projections" />
                     <Tab textColor="inherit" label="Indexes" />
                     <Tab textColor="inherit" label="Users" />
                 </Tabs>
-            </AppBar>
-            <AppBar
-                component="div"
-                className={classes.tertiaryBar}
-                position="static"
-                elevation={0}
-            >
-                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                    <Link color="inherit" href="/" className={classes.breadcrumbItem}>
-                        All
-                    </Link>
-                    <Link color="inherit" href="/" className={classes.breadcrumbItem}>
-                        model-0e748b9f-84d5-4663-bdb7-399f411cd503
-                    </Link>
-                    {/* <Typography color="textPrimary" className={classes.breadcrumbItem}>
-                        model-0e748b9f-84d5-4663-bdb7-399f411cd503
-                    </Typography> */}
-                    <Typography color="textPrimary" className={classes.breadcrumbItem}>
-                        2
-                    </Typography>
-                </Breadcrumbs>
+                {
+                    !!props.stream &&
+                    <Breadcrumbs className={classes.breadcrumb} separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                        <Link color="inherit" href="/" className={classes.breadcrumbItem}>
+                            All
+                        </Link>
+                        <Link color="inherit" href="/" className={classes.breadcrumbItem}>
+                            {props.stream}
+                        </Link>
+                        {
+                             !!props.message &&
+                             <Typography color="textPrimary" className={classes.breadcrumbItem}>
+                                {props.message}
+                            </Typography>
+                        }
+                    </Breadcrumbs>
+                }
+               
             </AppBar>
         </React.Fragment>
     );

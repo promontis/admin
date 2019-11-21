@@ -12,6 +12,7 @@ import { AppendStream } from "./stream/message/new";
 import breadcrumbCreator from './Breadcrumbs';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { Header } from "./header/header";
 
 import { Drawer, CssBaseline, AppBar, Toolbar, Grid, Link } from "@material-ui/core";
 import clsx from "clsx";
@@ -24,6 +25,10 @@ function MadeWithLove() {
             Made with <span style={{ color: "red" }}>❤</span> in Holland
         </Typography>
     );
+}
+
+export interface HeaderRoute {
+    title?: string;
 }
 
 const drawerWidth = 256;
@@ -96,12 +101,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const routes: (RouteConfig & BreadcrumbsRoute)[] = [
+const routes: (RouteConfig & BreadcrumbsRoute & HeaderRoute)[] = [
     {
         exact: true,
         path: "/:database/new",
         component: ({ match }: any) => (<AppendStream database={decodeURIComponent(match.params.database)} stream="" />),
-        breadcrumb: "new"
+        breadcrumb: "new",
+        title: "New"
     },
     {
         exact: true,
@@ -111,31 +117,36 @@ const routes: (RouteConfig & BreadcrumbsRoute)[] = [
             const redirectUrl = values.get("redirectUrl");
             return <Login redirectUrl={redirectUrl} />
         },
-        breadcrumb: "login"
+        breadcrumb: "login",
+        title: "Login"
     },
     {
         exact: true,
         path: "/logout",
         component: () => <Logout returnUrl={undefined} />,
-        breadcrumb: "logout"
+        breadcrumb: "logout",
+        title: "Logout"
     },
     {
         exact: true,
         path: "/",
         component: () => <Dashboard />,
-        breadcrumb: "Home"
+        breadcrumb: "Home",
+        title: "Home"
     },
     {
         exact: true,
         path: "/:database/:stream/new",
         component: ({ match }: any) => (<AppendStream database={decodeURIComponent(match.params.database)} stream={decodeURIComponent(match.params.stream)} />),
-        breadcrumb: ({ match }: any) => "new event"
+        breadcrumb: ({ match }: any) => "new event",
+        title: "New Stream"
     },
     {
         exact: true,
         path: "/:database",
         component: ({ match }: any) => (<Streams database={decodeURIComponent(match.params.database)} />),
-        breadcrumb: ({ match }: any) => decodeURIComponent(match.params.database)
+        breadcrumb: ({ match }: any) => decodeURIComponent(match.params.database),
+        title: "Database"
     },
     {
         exact: true,
@@ -144,6 +155,7 @@ const routes: (RouteConfig & BreadcrumbsRoute)[] = [
             return (<Redirect to={`/${encodeURIComponent(match.params.database)}/${encodeURIComponent(match.params.stream)}/last/backward`} />)
         },
         breadcrumb: null,
+        title: "Foo"
     },
     {
         exact: true,
@@ -227,33 +239,6 @@ export default function App() {
                 </Drawer>
             }
             <main className={clsx(classes.app, isAuthenticated && classes.appBarShift)}>
-                <AppBar color="primary" position="sticky" elevation={0}>
-                    <Toolbar>
-                        <Grid container spacing={1} alignItems="center">
-                            <Grid item xs />
-                            <Grid item>
-                                <Link className={classes.link} href="#" variant="body2">
-                                    Go to docs
-                            </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link className={classes.link} href="https://streamsdb.io/chat/" variant="body2">
-                                    Chat
-                            </Link>
-                            </Grid>
-                            <Grid item>
-                                {isAuthenticated ?
-                                    <Link className={classes.link} component={RouterLink} to="/logout" variant="body2">
-                                        Logout
-                                </Link> :
-                                    <Link className={classes.link} component={RouterLink} to="/login" variant="body2">
-                                        Login
-                                </Link>
-                                }
-                            </Grid>
-                        </Grid>
-                    </Toolbar>
-                </AppBar>
                 <main className={classes.main}>
                     <Switch>
                         {routes.filter(i => i.component).map(r => <Route exact={r.exact} path={r.path} component={r.component} />)}
