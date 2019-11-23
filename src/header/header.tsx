@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
         borderColor: lightColor,
     },
     breadcrumbItem: {
-        fontSize: '12px'
+        fontSize: '14px'
     }
 }));
 
@@ -77,7 +77,7 @@ export function Header(props: HeaderProps) {
                         <Grid item xs />
                         <Grid item>
                             <Link className={classes.link} href="#" variant="body2">
-                                Go to docs
+                                Go to Docs
                         </Link>
                         </Grid>
                         <Grid item>
@@ -88,10 +88,10 @@ export function Header(props: HeaderProps) {
                         <Grid item>
                             {isAuthenticated ?
                                 <Link className={classes.link} component={RouterLink} to="/logout" variant="body2">
-                                    Logout
+                                    Log Out
                             </Link> :
                                 <Link className={classes.link} component={RouterLink} to="/login" variant="body2">
-                                    Login
+                                    Log In
                             </Link>
                             }
                         </Grid>

@@ -135,7 +135,6 @@ const SliceView: FunctionComponent<SelectionAndData> = ({ database, stream, from
 
     return (
         <>
-            <Header database={database} stream={stream} />
             <Grid container spacing={1} className={classes.paper}>
                 <Grid item xs={12}>
                     <Typography variant="caption" color="textSecondary" gutterBottom>
@@ -230,52 +229,62 @@ const Loading: FunctionComponent<NoDataProps> = ({ database, stream }) => {
 
 export const List: FunctionComponent<Props> = ({ database, stream, from, limit, reverse }) => {
     if (reverse) {
-        return <ReadStreamBackwardComponent variables={{ database, stream, from, limit }}>
-            {({ data, error, loading }) => {
-                if (error) { return <pre>{JSON.stringify(error)}</pre> }
-                if (loading) { return <Loading database={database} stream={stream} /> }
+        return (
+            <>
+                <Header database={database} stream={stream} />
+                <ReadStreamBackwardComponent variables={{ database, stream, from, limit }}>
+                    {({ data, error, loading }) => {
+                        if (error) { return <pre>{JSON.stringify(error)}</pre> }
+                        if (loading) { return <Loading database={database} stream={stream} /> }
 
-                if (!data || !data.readStreamBackward) {
-                    return <Grid key="nodata" item xs={12}>
-                        <ExpansionPanel TransitionProps={{
-                            timeout: 0
-                        }}>
-                            <ExpansionPanelSummary>
-                                <Grid container spacing={0}>
-                                    no events
-                </Grid>
-                            </ExpansionPanelSummary>
-                        </ExpansionPanel>
-                    </Grid>
-                }
+                        if (!data || !data.readStreamBackward) {
+                            return <Grid key="nodata" item xs={12}>
+                                <ExpansionPanel TransitionProps={{
+                                    timeout: 0
+                                }}>
+                                    <ExpansionPanelSummary>
+                                        <Grid container spacing={0}>
+                                            no events
+                        </Grid>
+                                    </ExpansionPanelSummary>
+                                </ExpansionPanel>
+                            </Grid>
+                        }
 
-                const slice = data.readStreamBackward as Slice;
-                return <SliceView database={database} stream={stream} from={from} limit={limit} reverse={reverse} slice={slice} />
-            }}
-        </ReadStreamBackwardComponent>
+                        const slice = data.readStreamBackward as Slice;
+                        return <SliceView database={database} stream={stream} from={from} limit={limit} reverse={reverse} slice={slice} />
+                    }}
+                </ReadStreamBackwardComponent>
+            </>
+        );
     }
 
-    return <ReadStreamForwardComponent variables={{ database, stream, from, limit }}>
-        {({ data, error, loading }) => {
-            if (error) { return <pre>{JSON.stringify(error)}</pre> }
-            if (loading) { return <Loading database={database} stream={stream} /> }
+    return (
+        <>
+            <Header database={database} stream={stream} />
+            <ReadStreamForwardComponent variables={{ database, stream, from, limit }}>
+                {({ data, error, loading }) => {
+                    if (error) { return <pre>{JSON.stringify(error)}</pre> }
+                    if (loading) { return <Loading database={database} stream={stream} /> }
 
-            if (!data || !data.readStreamForward) {
-                return <Grid key="nodata" item xs={12}>
-                    <ExpansionPanel TransitionProps={{
-                        timeout: 0
-                    }}>
-                        <ExpansionPanelSummary>
-                            <Grid container spacing={0}>
-                                no events
-              </Grid>
-                        </ExpansionPanelSummary>
-                    </ExpansionPanel>
-                </Grid>
-            }
+                    if (!data || !data.readStreamForward) {
+                        return <Grid key="nodata" item xs={12}>
+                            <ExpansionPanel TransitionProps={{
+                                timeout: 0
+                            }}>
+                                <ExpansionPanelSummary>
+                                    <Grid container spacing={0}>
+                                        no events
+                    </Grid>
+                                </ExpansionPanelSummary>
+                            </ExpansionPanel>
+                        </Grid>
+                    }
 
-            const slice = data.readStreamForward as Slice;
-            return <SliceView database={database} stream={stream} from={from} limit={limit} reverse={reverse} slice={slice} />
-        }}
-    </ReadStreamForwardComponent>
+                    const slice = data.readStreamForward as Slice;
+                    return <SliceView database={database} stream={stream} from={from} limit={limit} reverse={reverse} slice={slice} />
+                }}
+            </ReadStreamForwardComponent>
+        </>
+    );
 }
