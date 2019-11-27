@@ -11,70 +11,109 @@ import IconButton from '@material-ui/core/IconButton';
 import { createStyles, Theme, withStyles, WithStyles, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import { Tabs, Tab, Link } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import { Header } from '../header/header';
+import { useAuthContext } from '../login/state';
+import { Link as RouterLink } from "react-router-dom";
+
+const lightColor = 'rgba(255, 255, 255, 0.7)';
 
 const useStyles = makeStyles(theme => ({
     paper: {
-      maxWidth: 936,
-      margin: 'auto',
-      overflow: 'hidden',
+        // flexGrow: 1,
+        //backgroundColor: theme.palette.background.paper,
+        margin: '0 auto'
+    },
+    appBar: {
+        background: 'transparent',
+        // boxShadow: 'none',
+        color: "black"
     },
     searchBar: {
-      borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
     },
     searchInput: {
-      fontSize: theme.typography.fontSize,
+        fontSize: theme.typography.fontSize,
     },
     block: {
-      display: 'block',
+        display: 'block',
     },
     addUser: {
-      marginRight: theme.spacing(1),
+        marginRight: theme.spacing(1),
     },
     contentWrapper: {
-      margin: '40px 16px',
+        margin: '40px 16px',
     },
-  }));
+    indicator: {
+        backgroundColor: theme.palette.primary.main,
+    },
+    link: {
+        textDecoration: 'none',
+        color: 'black',
+        '&:hover': {
+            color: 'black',
+        },
+    },
+    select: {
+        marginTop: '55px',
+        marginLeft: '24px',
+        color: 'black' //'rgba(0, 0, 0, 0.54)'
+    },
+    arrow: {
+        marginLeft: '48px',
+    }
+}));
 
 export function Dashboard() {
 
-  const classes = useStyles();
+    const classes = useStyles();
+    const { isAuthenticated } = useAuthContext();
 
-  return (
-    <Paper className={classes.paper}>
-      <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
-        <Toolbar>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <SearchIcon className={classes.block} color="inherit" />
-            </Grid>
-            <Grid item xs>
-              <TextField
-                fullWidth
-                placeholder="Search by email address, phone number, or user UID"
-                InputProps={{
-                  disableUnderline: true,
-                  className: classes.searchInput,
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="primary" className={classes.addUser}>
-                Add user
-              </Button>
-              <Tooltip title="Reload">
-                <IconButton>
-                  <RefreshIcon className={classes.block} color="inherit" />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.contentWrapper}>
-        <Typography color="textSecondary" align="center">
-          No users for this project yet
-        </Typography>
-      </div>
-    </Paper>
-  );
+    return (
+        <div>
+            
+            <AppBar  
+                component="div"
+                className={classes.appBar}
+                position="static"
+                elevation={0}
+            >
+                 <Toolbar>
+                    <Grid container spacing={1} alignItems="center">
+                        <Grid item xs />
+                        <Grid item>
+                            <Link className={classes.link} href="#" variant="body2">
+                                Go to Docs
+                        </Link>
+                        </Grid>
+                        <Grid item>
+                            <Link className={classes.link} href="https://streamsdb.io/chat/" variant="body2">
+                                Chat
+                        </Link>
+                        </Grid>
+                        <Grid item>
+                            {isAuthenticated ?
+                                <Link className={classes.link} component={RouterLink} to="/logout" variant="body2">
+                                    Log Out
+                            </Link> :
+                                <Link className={classes.link} component={RouterLink} to="/login" variant="body2">
+                                    Log In
+                            </Link>
+                            }
+                        </Grid>
+                    </Grid>
+                </Toolbar>
+                
+            </AppBar>
+
+            <div className={classes.paper}>
+               <h3 className={classes.select}>Please select a database</h3>
+               <img src='arrow.png' width='50px' className={classes.arrow} />
+            </div>
+            
+        </div>
+    );
 }

@@ -8,11 +8,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Skeleton from 'react-loading-skeleton';
-import { Divider, ListItemIcon, IconButton, makeStyles, Button } from '@material-ui/core';
+import { ListItemIcon, IconButton, makeStyles, Button } from '@material-ui/core';
 import clsx from 'clsx';
-import DashboardIcon from '@material-ui/icons/Dashboard';
 import DatabaseIcon from '@material-ui/icons/Storage';
-import HomeIcon from '@material-ui/icons/Home';
 import LogoIcon from './../LogoIcon';
 import { Link as RouterLink } from "react-router-dom";
 type Props = {
@@ -42,16 +40,6 @@ const useStyles = makeStyles(theme => ({
     title: {
         flexGrow: 1,
     },
-    // drawerPaper: {
-    //     position: 'relative',
-    //     whiteSpace: 'nowrap',
-    //     width: 240,
-    //     transition: theme.transitions.create('width', {
-    //         easing: theme.transitions.easing.sharp,
-    //         duration: theme.transitions.duration.enteringScreen,
-    //     }),
-    //     backgroundColor: '#18202c'
-    // },
     drawer: {
         [theme.breakpoints.up('sm')]: {
             width: drawerWidth,
@@ -150,7 +138,7 @@ export const Databases: FunctionComponent<Props> = () => {
     return (
         <DatabasesComponent>
 
-            {({ data, error, loading, refetch }) => {
+            {({ data, error, loading }) => {
 
                 var names: string[] = [];
 
@@ -182,14 +170,6 @@ export const Databases: FunctionComponent<Props> = () => {
                             <IconButton component={RouterLink} to={"/"} edge="end">
                                 <LogoIcon />
                             </IconButton>
-                        </ListItem>
-                        <ListItem className={clsx(classes.item, classes.itemCategory)}>
-                            <ListItemIcon className={classes.itemIcon}>
-                                <HomeIcon />
-                            </ListItemIcon>
-                            <ListItemText classes={{ primary: classes.itemPrimary, }}>
-                                Dashboard
-                    </ListItemText>
                         </ListItem>
                         <ListItem className={classes.categoryHeader}>
                             <ListItemText classes={{ primary: classes.categoryHeaderPrimary, }}>

@@ -20,7 +20,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Breadcrumbs } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-const lightColor = 'rgba(255, 255, 255, 0.7)';
+const lightColor = 'white';
 
 const useStyles = makeStyles(theme => ({
     breadcrumb: {
